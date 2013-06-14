@@ -1,5 +1,6 @@
 from zope.i18nmessageid import MessageFactory
-FavoritingPortletMessageFactory = MessageFactory('collective.portlet.favoriting')
+mfid = 'collective.portlet.favoriting'
+FavoritingPortletMessageFactory = MessageFactory(mfid)
 
 
 def initialize(context):
