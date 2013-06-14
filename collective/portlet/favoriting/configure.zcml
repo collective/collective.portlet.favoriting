@@ -1,0 +1,43 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:five="http://namespaces.zope.org/five"
+    xmlns:cmf="http://namespaces.zope.org/cmf"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    xmlns:plone="http://namespaces.plone.org/plone"
+    i18n_domain="collective.portlet.favoriting">
+
+    <five:registerPackage package="." initialize=".initialize" />
+
+  <includeDependencies package="." />
+  <include package="Products.CMFCore" file="permissions.zcml" />
+  <i18n:registerTranslations directory="locales" />
+
+  <genericsetup:registerProfile
+       name="default"
+       title="Favoriting Portlet"
+       directory="profiles/default"
+       description=""
+       provides="Products.GenericSetup.interfaces.EXTENSION"
+       />
+  <include file="upgrades.zcml" />
+
+     <!-- Register the portlet -->
+
+     <!-- If the portlet has no configurable parameters, you can remove
+          the EditForm declaration in favoritingportlet.py and delete
+          the 'editview' attribute from this statement.
+       -->
+
+     <plone:portlet
+         name="collective.portlet.favoriting.FavoritingPortlet"
+         interface=".favoritingportlet.IFavoritingPortlet"
+         assignment=".favoritingportlet.Assignment"
+         view_permission="zope2.View"
+         edit_permission="cmf.ManagePortal"
+         renderer=".favoritingportlet.Renderer"
+         addview=".favoritingportlet.AddForm"
+         editview=".favoritingportlet.EditForm"
+         />
+
+</configure>
