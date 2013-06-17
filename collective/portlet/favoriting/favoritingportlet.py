@@ -2,18 +2,16 @@ from zope.interface import implements
 from zope import schema
 from z3c.form import field
 
-from plone.autoform import directives as form
+#from plone.autoform import directives as form
 from plone.app.collection import _ as _c
 from plone.app.portlets.portlets import base
 from plone.app.portlets.browser import z3cformhelper
-from plone.formwidget.querystring.widget import QueryStringFieldWidget
+#from plone.formwidget.querystring.widget import QueryStringFieldWidget
 from plone.portlets.interfaces import IPortletDataProvider
 
-from Products.CMFCore.utils import getToolByName
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 from collective.portlet.favoriting import FavoritingPortletMessageFactory as _
-from plone.formwidget.querystring.widget import QueryStringFieldWidget
 from collective.favoriting.browser.favoriting_view import VIEW_NAME
 
 
@@ -30,7 +28,6 @@ class IFavoritingPortlet(IPortletDataProvider):
 #    form.widget(query=QueryStringFieldWidget)
 #    query = schema.List(
 #        title=_c(u'Search terms'),
-#        description=_c(u"Define the search terms for the items you want to list by choosing what to match on. The list of results will be dynamically updated."),
 #        value_type=schema.Dict(value_type=schema.Field(),
 #                               key_type=schema.TextLine()),
 #        required=False
@@ -55,6 +52,7 @@ class IFavoritingPortlet(IPortletDataProvider):
         default=1000,
     )
 
+
 class Assignment(base.Assignment):
     """Portlet assignment.
 
@@ -73,9 +71,9 @@ class Assignment(base.Assignment):
     def __init__(
         self,
         title=None,
-#        query=None,
-        sort_on = None,
-        sort_reversed = None,
+        #query=None,
+        sort_on=None,
+        sort_reversed=None,
         limit=None,
     ):
         self._title = title
