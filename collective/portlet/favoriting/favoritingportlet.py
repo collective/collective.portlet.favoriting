@@ -1,4 +1,5 @@
-from zope.interface import implements
+from zope import component
+from zope import interface
 from zope import schema
 from z3c.form import field
 
@@ -13,6 +14,7 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 from collective.portlet.favoriting import FavoritingPortletMessageFactory as _
 from collective.favoriting.browser.favoriting_view import VIEW_NAME
+from plone.app.layout.viewlets.common import ViewletBase
 
 
 class IFavoritingPortlet(IPortletDataProvider):
@@ -60,7 +62,7 @@ class Assignment(base.Assignment):
     with columns.
     """
 
-    implements(IFavoritingPortlet)
+    interface.implements(IFavoritingPortlet)
 
     title = None
     query = None
@@ -119,6 +121,13 @@ class Renderer(base.Renderer):
         if sort_reversed is not None:
             query["sort_reversed"] = sort_reversed
         return manager.get(query=query)
+
+    def site_url(self):
+        portal_state = component.getMultiAdapter(
+            (self.context, self.request),
+            name=u'plone_portal_state'
+        )
+        return portal_state.portal_url()
 
 
 class AddForm(z3cformhelper.AddForm):

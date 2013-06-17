@@ -17,7 +17,8 @@
 
     <dd class="portletFooter">
         <span class="portletBottomLeft"></span>
-        Footer
+        <a tal:attributes="href string:${view/site_url}/@@favoriting_view"
+           i18n:domain="collective.favoriting" i18n:translate="">My favorites</a>
         <span class="portletBottomRight"></span>
     </dd>
 
