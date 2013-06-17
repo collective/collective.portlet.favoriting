@@ -15,7 +15,7 @@
 
   <genericsetup:registerProfile
        name="default"
-       title="Favoriting Portlet"
+       title="collective.portlet.favoriting Portlet"
        directory="profiles/default"
        description=""
        provides="Products.GenericSetup.interfaces.EXTENSION"

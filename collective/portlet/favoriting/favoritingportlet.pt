@@ -3,13 +3,17 @@
 
     <dt class="portletHeader">
         <span class="portletTopLeft"></span>
-        Header
+        <span tal:replace="view/data/title"></span>
         <span class="portletTopRight"></span>
     </dt>
 
-    <dd class="portletItem odd">
-        Body text
+    <tal:fav tal:repeat="fav view/get_favorites">
+    <dd class="portletItem odd"
+        tal:define="oddrow repeat/fav/odd"
+        tal:attributes="class python:oddrow and 'portletItem even' or 'portletItem odd'">
+        <a tal:attributes="href fav/getURL" tal:content="fav/Title"></a>
     </dd>
+    </tal:fav>
 
     <dd class="portletFooter">
         <span class="portletBottomLeft"></span>

@@ -1,15 +1,20 @@
 from zope.interface import implements
 from zope import schema
-
-from plone.portlets.interfaces import IPortletDataProvider
-from plone.app.portlets.portlets import base
-from plone.app.portlets.browser import z3cformhelper
-
 from z3c.form import field
 
+from plone.autoform import directives as form
+from plone.app.collection import _ as _c
+from plone.app.portlets.portlets import base
+from plone.app.portlets.browser import z3cformhelper
+from plone.formwidget.querystring.widget import QueryStringFieldWidget
+from plone.portlets.interfaces import IPortletDataProvider
+
+from Products.CMFCore.utils import getToolByName
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 from collective.portlet.favoriting import FavoritingPortletMessageFactory as _
+from plone.formwidget.querystring.widget import QueryStringFieldWidget
+from collective.favoriting.browser.favoriting_view import VIEW_NAME
 
 
 class IFavoritingPortlet(IPortletDataProvider):
@@ -21,11 +26,33 @@ class IFavoritingPortlet(IPortletDataProvider):
     """
 
     title = schema.TextLine(title=_(u"Title"), required=False)
-    limit = schema.Int(title=_(u"Limit"), required=False)
-    ftype = schema.Choice(
-        title=_(u"Filter by type"),
+
+#    form.widget(query=QueryStringFieldWidget)
+#    query = schema.List(
+#        title=_c(u'Search terms'),
+#        description=_c(u"Define the search terms for the items you want to list by choosing what to match on. The list of results will be dynamically updated."),
+#        value_type=schema.Dict(value_type=schema.Field(),
+#                               key_type=schema.TextLine()),
+#        required=False
+#    )
+
+    sort_on = schema.TextLine(
+        title=_c(u'label_sort_on', default=u'Sort on'),
+        description=_c(u"Sort the collection on this index"),
         required=False,
-        vocabulary="plone.app.vocabularies.ReallyUserFriendlyTypes",
+    )
+
+    sort_reversed = schema.Bool(
+        title=_c(u'label_sort_reversed', default=u'Reversed order'),
+        description=_c(u'Sort the results in reversed order'),
+        required=False,
+    )
+
+    limit = schema.Int(
+        title=_c(u'label_limit', default=u'Limit'),
+        description=_c(u'Limit Search Results'),
+        required=False,
+        default=1000,
     )
 
 class Assignment(base.Assignment):
@@ -38,13 +65,25 @@ class Assignment(base.Assignment):
     implements(IFavoritingPortlet)
 
     title = None
+    query = None
+    sort_on = None
+    sort_reversed = None
     limit = None
-    ftype = None
 
-    def __init__(self, title=None, limit=None, ftype=None):
+    def __init__(
+        self,
+        title=None,
+#        query=None,
+        sort_on = None,
+        sort_reversed = None,
+        limit=None,
+    ):
         self._title = title
+#        self.query = query
+        self.query = None
+        self.sort_on = sort_on
+        self.sort_reversed = sort_reversed
         self.limit = limit
-        self.ftype = ftype
 
     @property
     def title(self):
@@ -66,6 +105,23 @@ class Renderer(base.Renderer):
 
     render = ViewPageTemplateFile('favoritingportlet.pt')
 
+    def get_favorites(self):
+        manager = self.context.restrictedTraverse(VIEW_NAME)
+        query = {}
+        #query.update(self.data.get(query))
+        limit = self.data.get("limit", None)
+        sort_on = self.data.get("sort_on", None)
+        sort_reversed = self.data.get("sort_reversed")
+        if limit is not None:
+            query["sort_on"] = "effective"
+            query["sort_reversed"] = True
+            query["limit"] = limit
+        if sort_on is not None:
+            query["sort_on"] = sort_on
+        if sort_reversed is not None:
+            query["sort_reversed"] = sort_reversed
+        return manager.get(query=query)
+
 
 class AddForm(z3cformhelper.AddForm):
     """Portlet add form.
@@ -74,7 +130,7 @@ class AddForm(z3cformhelper.AddForm):
     zope.formlib which fields to display. The create() method actually
     constructs the assignment that is being added.
     """
-    form_fields = field.Fields(IFavoritingPortlet)
+    fields = field.Fields(IFavoritingPortlet)
 
     def create(self, data):
         return Assignment(**data)
@@ -86,4 +142,4 @@ class EditForm(z3cformhelper.EditForm):
     This is registered with configure.zcml. The form_fields variable tells
     zope.formlib which fields to display.
     """
-    form_fields = field.Fields(IFavoritingPortlet)
+    fields = field.Fields(IFavoritingPortlet)

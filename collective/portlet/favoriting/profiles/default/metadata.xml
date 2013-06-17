@@ -2,6 +2,6 @@
 <metadata>
   <version>1000</version>
   <dependencies>
-    <dependency>profile-collective.portlet.favoriting</dependency>
+    <dependency>profile-collective.favoriting:default</dependency>
   </dependencies>
 </metadata>
