@@ -4,7 +4,7 @@ from zope import schema
 from z3c.form import field
 
 #from plone.autoform import directives as form
-from plone.app.collection import _ as _c
+from Products.CMFPlone import PloneMessageFactory as _p
 from plone.app.portlets.portlets import base
 from plone.app.portlets.browser import z3cformhelper
 #from plone.formwidget.querystring.widget import QueryStringFieldWidget
@@ -29,27 +29,27 @@ class IFavoritingPortlet(IPortletDataProvider):
 
 #    form.widget(query=QueryStringFieldWidget)
 #    query = schema.List(
-#        title=_c(u'Search terms'),
+#        title=_p(u'Search terms'),
 #        value_type=schema.Dict(value_type=schema.Field(),
 #                               key_type=schema.TextLine()),
 #        required=False
 #    )
 
     sort_on = schema.TextLine(
-        title=_c(u'label_sort_on', default=u'Sort on'),
-        description=_c(u"Sort the collection on this index"),
+        title=_p(u'label_sort_on', default=u'Sort on'),
+        description=_p(u"Sort the collection on this index"),
         required=False,
     )
 
     sort_reversed = schema.Bool(
-        title=_c(u'label_sort_reversed', default=u'Reversed order'),
-        description=_c(u'Sort the results in reversed order'),
+        title=_p(u'label_sort_reversed', default=u'Reversed order'),
+        description=_p(u'Sort the results in reversed order'),
         required=False,
     )
 
     limit = schema.Int(
-        title=_c(u'label_limit', default=u'Limit'),
-        description=_c(u'Limit Search Results'),
+        title=_p(u'label_limit', default=u'Limit'),
+        description=_p(u'Limit Search Results'),
         required=False,
         default=1000,
     )
