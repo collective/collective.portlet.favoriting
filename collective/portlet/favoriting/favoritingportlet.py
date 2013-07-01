@@ -14,7 +14,6 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 from collective.portlet.favoriting import FavoritingPortletMessageFactory as _
 from collective.favoriting.browser.favoriting_view import VIEW_NAME
-from plone.app.layout.viewlets.common import ViewletBase
 
 
 class IFavoritingPortlet(IPortletDataProvider):
