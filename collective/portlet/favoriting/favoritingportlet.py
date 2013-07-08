@@ -26,24 +26,9 @@ class IFavoritingPortlet(IPortletDataProvider):
 
     title = schema.TextLine(title=_(u"Title"), required=False)
 
-#    form.widget(query=QueryStringFieldWidget)
-#    query = schema.List(
-#        title=_p(u'Search terms'),
-#        value_type=schema.Dict(value_type=schema.Field(),
-#                               key_type=schema.TextLine()),
-#        required=False
-#    )
-
-    sort_on = schema.TextLine(
-        title=_p(u'label_sort_on', default=u'Sort on'),
-        description=_p(u"Sort the collection on this index"),
-        required=False,
-    )
-
-    sort_reversed = schema.Bool(
-        title=_p(u'label_sort_reversed', default=u'Reversed order'),
-        description=_p(u'Sort the results in reversed order'),
-        required=False,
+    portal_type = schema.Choice(
+        title=_(u"Portal type"),
+        vocabulary="plone.app.vocabularies.ReallyUserFriendlyTypes"
     )
 
     limit = schema.Int(
@@ -64,24 +49,17 @@ class Assignment(base.Assignment):
     interface.implements(IFavoritingPortlet)
 
     title = None
-    query = None
-    sort_on = None
-    sort_reversed = None
     limit = None
+    portal_type = None
 
     def __init__(
         self,
         title=None,
-        #query=None,
-        sort_on=None,
-        sort_reversed=None,
+        portal_type=None,
         limit=None,
     ):
         self._title = title
-#        self.query = query
-        self.query = None
-        self.sort_on = sort_on
-        self.sort_reversed = sort_reversed
+        self.portal_type = portal_type
         self.limit = limit
 
     @property
@@ -107,18 +85,10 @@ class Renderer(base.Renderer):
     def get_favorites(self):
         manager = self.context.restrictedTraverse(VIEW_NAME)
         query = {}
-        #query.update(self.data.get(query))
+        query["sort_on"] = "sortable_title"
         limit = self.data.get("limit", None)
-        sort_on = self.data.get("sort_on", None)
-        sort_reversed = self.data.get("sort_reversed")
         if limit is not None:
-            query["sort_on"] = "effective"
-            query["sort_reversed"] = True
             query["limit"] = limit
-        if sort_on is not None:
-            query["sort_on"] = sort_on
-        if sort_reversed is not None:
-            query["sort_reversed"] = sort_reversed
         return manager.get(query=query)
 
     def site_url(self):
