@@ -24,10 +24,11 @@ class IFavoritingPortlet(IPortletDataProvider):
     same.
     """
 
-    title = schema.TextLine(title=_(u"Title"), required=False)
+    title = schema.TextLine(title=_p(u"Title"), required=False)
 
     portal_type = schema.Choice(
-        title=_(u"Portal type"),
+        title=_p(u"Content Type"),
+        required=False,
         vocabulary="plone.app.vocabularies.ReallyUserFriendlyTypes"
     )
 
@@ -35,7 +36,7 @@ class IFavoritingPortlet(IPortletDataProvider):
         title=_p(u'label_limit', default=u'Limit'),
         description=_p(u'Limit Search Results'),
         required=False,
-        default=1000,
+        default=100,
     )
 
 
@@ -52,12 +53,7 @@ class Assignment(base.Assignment):
     limit = None
     portal_type = None
 
-    def __init__(
-        self,
-        title=None,
-        portal_type=None,
-        limit=None,
-    ):
+    def __init__(self, title=None, portal_type=None, limit=None):
         self._title = title
         self.portal_type = portal_type
         self.limit = limit
@@ -89,6 +85,9 @@ class Renderer(base.Renderer):
         limit = self.data.get("limit", None)
         if limit is not None:
             query["limit"] = limit
+        portal_type = self.data.get("portal_type", None)
+        if portal_type is not None:
+            query["portal_type"] = portal_type
         return manager.get(query=query)
 
     def site_url(self):
