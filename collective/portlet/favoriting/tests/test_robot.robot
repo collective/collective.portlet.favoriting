@@ -11,7 +11,6 @@ Test Teardown  Close all browsers
 Assert: I can hit the home page
     Given I'm not loggedin
       And I'm on the home page
-     Then I see welcome message
 
 *** Keywords ***
 
@@ -30,6 +29,3 @@ I'm on the home page
     Go to  ${PLONE_URL}
 
 #ASSERTIONS
-I see welcome message
-    Import library  Dialogs
-    Pause execution
