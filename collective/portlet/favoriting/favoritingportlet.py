@@ -26,7 +26,7 @@ class IFavoritingPortlet(IPortletDataProvider):
 
     title = schema.TextLine(title=_p(u"Title"), required=False)
 
-    portal_type = schema.Choice(
+    ptype = schema.Choice(
         title=_p(u"Content Type"),
         required=False,
         vocabulary="plone.app.vocabularies.ReallyUserFriendlyTypes"
@@ -51,11 +51,11 @@ class Assignment(base.Assignment):
 
     title = None
     limit = None
-    portal_type = None
+    ptype = None
 
-    def __init__(self, title=None, portal_type=None, limit=None):
+    def __init__(self, title=None, ptype=None, limit=None):
         self._title = title
-        self.portal_type = portal_type
+        self.ptype = ptype
         self.limit = limit
 
     @property
@@ -82,10 +82,10 @@ class Renderer(base.Renderer):
         manager = self.context.restrictedTraverse(VIEW_NAME)
         query = {}
         query["sort_on"] = "sortable_title"
-        limit = self.data.get("limit", None)
+        limit = self.data.limit
         if limit is not None:
             query["limit"] = limit
-        portal_type = self.data.get("portal_type", None)
+        portal_type = self.data.ptype
         if portal_type is not None:
             query["portal_type"] = portal_type
         return manager.get(query=query)
